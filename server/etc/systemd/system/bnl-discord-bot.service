@@ -1,0 +1,7 @@
+[Unit]
+Description=Start the app
+
+[Service]
+EnvironmentFile=/var/live/bnls/.env
+ExecStart=/usr/bin/node /var/live/bnls/bot.bin.js
+Restart=always
