@@ -2,5 +2,6 @@
 Description=Start the app
 
 [Service]
+EnvironmentFile=/var/live/battle-nation-live-discord-bot/.env
 ExecStart=/usr/bin/node /var/live/bnl-discord-bot/bot.bin.js
 Restart=always
