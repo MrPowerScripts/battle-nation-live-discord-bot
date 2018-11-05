@@ -1,0 +1,32 @@
+{
+    "name": "battle-nation-live-bot",
+    "version": "1.0.0",
+    "description": "Bot for BattleNationLive.com",
+    "main": "bot.js",
+    "homepage": "https://battlenationlive.com",
+    "maintainers": ["MrPowerScripts"],
+    "author": "MrPowerScripts",
+    "dependencies": {
+        "discord.js": "git+https://git@github.com/discordjs/discord.js.git",
+        "forever": "^0.15.3",
+        "lokijs": "^1.5.3",
+        "npm": "^6.4.1",
+        "winston": "^3.0.0-rc3"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-preset-env": "^1.6.1",
+        "babel-register": "^6.26.0",
+        "babel-watch": "^2.0.7"
+    },
+    "scripts": {
+        "start": "NODE_ENV=dev babel-node bot.js",
+        "build": "babel bot.js -o bot.bin.js",
+        "dev_run": "NODE_ENV=dev forever start bot.bin.js",
+        "prod_run": "NODE_ENV=production forever start bot.bin.js",
+        "watch": "NODE_ENV=dev babel-watch bot.js",
+        "prod": "npm run build && npm run prod_run",
+        "dev": "npm run build && npm run dev_run",
+        "stop": "forever stopall"
+    }
+}

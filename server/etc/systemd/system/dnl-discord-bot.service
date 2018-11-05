@@ -1,0 +1,6 @@
+[Unit]
+Description=Start the app
+
+[Service]
+ExecStart=/usr/bin/node /var/live/bnl-discord-bot/bot.bin.js
+Restart=always
