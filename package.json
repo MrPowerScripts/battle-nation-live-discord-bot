@@ -22,11 +22,11 @@
     "scripts": {
         "start": "NODE_ENV=dev babel-node bot.js",
         "build": "babel bot.js -o bot.bin.js",
-        "dev_run": "NODE_ENV=dev forever start bot.bin.js",
-        "prod_run": "NODE_ENV=production forever start bot.bin.js",
+        "_dev_run": "NODE_ENV=dev forever start bot.bin.js",
+        "_prod_run": "NODE_ENV=production forever start bot.bin.js",
         "watch": "NODE_ENV=dev babel-watch bot.js",
-        "prod": "npm run build && npm run prod_run",
-        "dev": "npm run build && npm run dev_run",
+        "prod": "npm run build && npm run _prod_run",
+        "dev": "npm run build && npm run _dev_run",
         "stop": "forever stopall"
     }
 }
