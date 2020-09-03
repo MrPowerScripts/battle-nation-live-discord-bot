@@ -113,7 +113,7 @@ function bot() {
 
     // Remove the LIVE role from anyone who has it when the bot starts
     role.members.map(member => {
-      member.roles.remove(role)
+      member.removeRole(role)
       member.setMute(true)
     })
 
@@ -143,7 +143,7 @@ function bot() {
       let member = liveAccount.findOne()
       // take the live role away from them and mute them
       role.members.forEach(member => {
-        member.roles.remove(role) 
+        member.removeRole(role) 
         member.setMute(true)
       })
 
@@ -192,24 +192,28 @@ function bot() {
     // assign the live role to someone
     function assignLiveRole(guildMember) {
       // remove the LIVE who to whoever has it currently
-      role.members.map(member => member.roles.remove(role))
+      role.members.map(member => member.removeRole(role))
       // get the new performers id
       let member = myGuild.members.get(guildMember.id)
       // move them to the performing voice channel
       return member.setVoiceChannel(config.theShowVoiceChannelId)
       .then(what => {
           // give them the live role
-          member.roles.add(role)
+          member.addRoles([role])
           .then(what => {
               // unmute them so they can perform
               member.setMute(false)
+          })
+          .catch(error => {
+            console.log(error)
+            writeLog(error)
           })
       })
     }
 
     // get a message from The Show chat channel based on its ID
     function getMessage(messageId) {
-      return bot.channels.get(config.theShowChannelId).messages.fetch(messageId)
+      return bot.channels.get(config.theShowChannelId).messages.get(messageId)
     }
 
     // this starts the performance loop and monitors the perfomers success
@@ -224,31 +228,32 @@ function bot() {
       bot.setTimeout(()=> {
         // Get the live performers current annoucenemnt message.
         // so we can count their emoji stats
-        getMessage(getLivePerformer().message)
-        .then(message => {
-          // get the current performer
-          let live = liveAccount.findOne()
-          // filter through all the reactions to get the fire and poop count
-          message.reactions.map(reaction => {
-            switch(reaction.emoji.name) {
-              case "🔥":
-                live.dopes = reaction.count
-                break
-              case "💩":
-                live.nopes = reaction.count
-                break
-              default:
-            }
-          })
-          // do the performance math
-          live.total = live.dopes + live.nopes
-          live.dopeness = (parseInt(live.dopes) / parseInt(live.total)).toFixed(2)
-          //update the performer stats
-          liveAccount.update(live)
+        let message = getMessage(getLivePerformer().message)
 
-          setPlayStatus('performing', false)  //their current performance stops
-          writeLog('ending performance')
+        // console.log(message)
+
+        // get the current performer
+        let live = liveAccount.findOne()
+        // filter through all the reactions to get the fire and poop count
+        message.reactions.map(reaction => {
+          switch(reaction.emoji.name) {
+            case "🔥":
+              live.dopes = reaction.count
+              break
+            case "💩":
+              live.nopes = reaction.count
+              break
+            default:
+          }
         })
+        // do the performance math
+        live.total = live.dopes + live.nopes
+        live.dopeness = (parseInt(live.dopes) / parseInt(live.total)).toFixed(2)
+        //update the performer stats
+        liveAccount.update(live)
+
+        setPlayStatus('performing', false)  //their current performance stops
+        writeLog('ending performance')
       }, 15000) // we check the performers score every 15 seconds
     }
 
@@ -267,7 +272,9 @@ function bot() {
           // there's performer set, so lets start their performance
           // if not then check to see if anyone is next
           if (getLivePerformer().name) {
+            writeLog(`performer name: ${getLivePerformer().name}`)
             // someone is set to perform, so lets star their performance
+            writeLog(`are they fresh: ${getPlayStatus().fresh}`)
             if (getPlayStatus().fresh) {
               // this is their first run, so let's set them up
               // announce to chat they're performing
@@ -307,6 +314,7 @@ function bot() {
               sendChat(`<@${getLivePerformer().id}> lost the mic! Dopeness score: ${getLivePerformer().dopeness} Need: .60`)
               .then(what => {
                   // give the next performer the microphone
+                  setPlayStatus('fresh', true)
                   setLivePerformer(getNextPerformer())
               })
             }
@@ -351,7 +359,15 @@ function bot() {
           break
         // allow people to sign up and perform
         case "signup":
+            console.log("singing up")
+            // console.log(msg.member.voiceChannel)
+            if (!msg.member.voiceChannel) {
+              msg.reply(`join The Show voice channel first!`)
+              return
+            }
+
             try {
+              console.log(msg.author.voiceChannel)
               // add the user to the waiting list
               waitingList.insert({timestamp: msg.createdTimestamp, id: msg.author.id, name: msg.author.username})
               // add them to the performance voice channel
@@ -359,6 +375,8 @@ function bot() {
               msg.reply(`You're signed up!`)
               writeLog(`${msg.member.displayName} has signed up!`)
             } catch (e) {
+              console.log(e)
+              console.log("signup failed")
               msg.reply(`sign up failed, sorry!`)
             }
             break

@@ -4,10 +4,13 @@
     "description": "Bot for BattleNationLive.com",
     "main": "bot.js",
     "homepage": "https://battlenationlive.com",
-    "maintainers": ["MrPowerScripts"],
+    "maintainers": [
+        "MrPowerScripts"
+    ],
     "author": "MrPowerScripts",
     "dependencies": {
-        "discord.js": "git+https://git@github.com/discordjs/discord.js.git",
+        "@discordjs/form-data": "^3.0.1",
+        "discord.js": "^11.6.1",
         "forever": "^0.15.3",
         "lokijs": "^1.5.3",
         "npm": "^6.4.1",
@@ -20,7 +23,7 @@
         "babel-watch": "^2.0.7"
     },
     "scripts": {
-        "start": "NODE_ENV=dev babel-node bot.js",
+        "start": "NODE_ENV=production npm run build && node bot.bin.js",
         "build": "babel bot.js -o bot.bin.js",
         "_dev_run": "NODE_ENV=dev forever start bot.bin.js",
         "_prod_run": "NODE_ENV=production forever start bot.bin.js",

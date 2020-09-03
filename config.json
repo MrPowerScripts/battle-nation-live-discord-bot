@@ -1,8 +1,8 @@
 {
     "discordToken": "",
-    "theShowChannelId": "",
-    "theShowVoiceChannelId": "",
-    "chatChannelId": "",
-    "guildId": "",
-    "bot_ip": ""
+    "theShowChannelId": "746406207077613671",
+    "theShowVoiceChannelId": "746422664905621669",
+    "liveId": "746430535076937779",
+    "chatChannelId": "746423559810842695",
+    "guildId": "510821302773219331"
 }
