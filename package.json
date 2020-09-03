@@ -3,6 +3,9 @@
     "version": "1.0.0",
     "description": "Bot for BattleNationLive.com",
     "main": "bot.js",
+    "engines": {
+      "node": "10.2.1"
+    },
     "homepage": "https://battlenationlive.com",
     "maintainers": [
         "MrPowerScripts"
