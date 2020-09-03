@@ -4,7 +4,7 @@
     "description": "Bot for BattleNationLive.com",
     "main": "bot.js",
     "engines": {
-      "node": "10.2.1"
+        "node": "10.2.1"
     },
     "homepage": "https://battlenationlive.com",
     "maintainers": [
@@ -13,6 +13,7 @@
     "author": "MrPowerScripts",
     "dependencies": {
         "@discordjs/form-data": "^3.0.1",
+        "babel": "^6.23.0",
         "discord.js": "^11.6.1",
         "forever": "^0.15.3",
         "lokijs": "^1.5.3",
